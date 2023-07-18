@@ -1,3 +1,6 @@
+#CS361 Project: Tyler Purcell
+
+
 import PySimpleGUI as sg
 from datetime import date
 import webbrowser
