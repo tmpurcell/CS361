@@ -184,7 +184,7 @@ def maintenance_logger():
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Please choose an item below!', font='Arial 15'), sg.Push()],
         [sg.VPush()],
-        [sg.Push(), sg.Button("Edit Car Log"), sg.Push(), sg.Button('Create New Car Log'), sg.Push(), sg.Button("Add Maintenance"), sg.Push()],
+        [sg.Push(), sg.Button("Edit Car Log"), sg.Push(), sg.Button('Create New Car Log'), sg.Push(), sg.Button("Add Maintenance"), sg.Push(), sg.Button('Delete Car Log'), sg.Push()],
         [sg.VPush()],
         [sg.Push(), sg.Button("Understanding the Logger"), sg.Push()],
         [sg.VPush()],
@@ -212,6 +212,9 @@ def maintenance_logger():
 
         if event == 'Add Maintenance':
             add_maintenance()
+
+        if event == 'Delete Car Log':
+            delete_car_log()
 
         if event == 'Close Application':
             exit()
@@ -312,8 +315,60 @@ def edit_car_log():
 
 
 def delete_car_log():
-    pass
+    layout = [
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='Here you can select a car log to delete if you need to.', font='Arial 15'), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='This will delete the file in its entirety.', font='Arial 20'), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Text('Please enter the Log to delete'), sg.Input(), sg.Push()],
+        [sg.Push(), sg.Button('Delete Car Log'), sg.Push(), sg.Button('Cancel'), sg.Push()],
+        [sg.VPush()]
+    ]
+        
 
+    window = sg.Window('Edit Car Log', layout, size=(800,400))
+
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED or event == 'Cancel':
+            break
+        print(event, values)
+
+        if event == "Delete Car Log":
+            value = values[0]
+            delete_helper(value)
+
+    window.close()
+
+def delete_helper(value):
+    layout = [
+        [sg.VPush()],
+        [sg.Push(), sg.Text('Do you wish to procede to delete the car log?', font='Arial 15'), sg.Push()],
+        [sg.Push(), sg.Button('Yes I am sure'), sg.Push(), sg.Button('No! Cancel!'), sg.Push()],
+        [sg.VPush()]
+    ]
+
+    window = sg.Window('Last Chance', layout, size=(800, 400))
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED or event == 'No! Cancel!':
+            break
+        window.close()
+
+        if event == 'Yes I am sure':
+            file_delete = value
+            file_name = str(file_delete).replace(' ', '.')
+            if os.path.exists(file_name.lower() + '.txt') == False:
+                sg.popup(title='The car log does not exist', custom_text='The car log does not exist')
+                if event == 'The car log does not exist':
+                    break
+                window.close()
+            else:
+                os.path.remove(file_name.lower() + '.txt')
+                break
+            window.close()
+    window.close()
 # def access_log():
 
 #     layout = [
