@@ -43,7 +43,7 @@ def understanding_program():
         [sg.Push(), sg.Text(text='The first few items will be buttons!'), sg.Button('Click me to see what I can do!'), sg.Push()],
         [sg.VPush()],
         [sg.Push(), sg.Text('Bellow are examples of buttons that you might encounter! You can click each one to learn more about them.'), sg.Push()],
-        [sg.Push(), sg.Button('Create New Car Log'), sg.Button('Add Maintenance'), sg.Button('Close Window'), sg.Push()],
+        [sg.Push(), sg.Button('Create New Car Log'), sg.Button('Add Maintenance'), sg.Button('Access Car Log'), sg.Button('Close Window'), sg.Push()],
         [sg.VPush()],
         [sg.Push(), sg.Text(text='When you are ready to start logging, click the button below!')],
         [sg.Push(), sg.Button('Take me to the logger!')]
@@ -69,6 +69,9 @@ def understanding_program():
 
         if event == 'Add Maintenance':
             maintenance_help()
+
+        if event == 'Access Car Log':
+            access_car_log()
 
         if event == 'Close Window':
             close_window()
@@ -157,6 +160,41 @@ def maintenance_help():
 
     window.close()
 
+def access_car_log():
+    database = open("database.txt", 'r')
+    car_database = database.read()
+    car_list = car_database.split('\n')
+
+    layout = [
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='When requesting access to a car log, you will see mulitple items.', font='Arial 13'), sg.Push()],
+        [sg.VPush()],
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='You will have drop down boxes:', font='Arial 13'), sg.Push()],
+        [sg.Push(), sg.Combo(size=(41), values=car_list), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='You will see buttons', font='Arial 13'), sg.Push()],
+        [sg.Push(), sg.Button('I am a button!'), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Text(text='These items will allow you to make a request to the microservice my partner has designed.', font='Arial 13'), sg.Push()],
+        [sg.Push(), sg.Text(text='The microservice will then send information back, for it to be displayed!', font='Arial 13'), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Button('Back')]
+    ]
+
+    window = sg.Window('Access Help', layout, size=(800,400))
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED:
+            break
+
+        if event == 'I am a button!':
+            button_help()
+
+        if event == 'Back':
+            break
+        window.close()
+
 def close_window():
     
     layout = [
@@ -184,7 +222,9 @@ def maintenance_logger():
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Please choose an item below!', font='Arial 15'), sg.Push()],
         [sg.VPush()],
-        [sg.Push(), sg.Button("Edit Car Log"), sg.Push(), sg.Button('Create New Car Log'), sg.Push(), sg.Button("Add Maintenance"), sg.Push(), sg.Button('Delete Car Log'), sg.Push()],
+        [sg.Push(), sg.Button("Edit Car Log"), sg.Push(), sg.Button('Create New Car Log'), sg.Push(), sg.Button("Add Maintenance"), sg.Push(), sg.Button('Access Car Log'), sg.Push()],
+        [sg.VPush()],
+        [sg.Push(), sg.Button('Delete Car Log'), sg.Push()],
         [sg.VPush()],
         [sg.Push(), sg.Button("Understanding the Logger"), sg.Push()],
         [sg.VPush()],
@@ -215,6 +255,9 @@ def maintenance_logger():
 
         if event == 'Delete Car Log':
             delete_car_log()
+
+        if event == 'Access Car Log':
+            access_log()
 
         if event == 'Close Application':
             exit()
@@ -315,13 +358,16 @@ def edit_car_log():
 
 
 def delete_car_log():
+    database = open("database.txt", 'r')
+    car_database = database.read()
+    car_list = car_database.split('\n')
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Here you can select a car log to delete if you need to.', font='Arial 15'), sg.Push()],
         [sg.VPush()],
         [sg.Push(), sg.Text(text='This will delete the file in its entirety.', font='Arial 20'), sg.Push()],
         [sg.VPush()],
-        [sg.Push(), sg.Text('Please enter the Log to delete'), sg.Input(), sg.Push()],
+        [sg.Push(), sg.Text('Please select the Log to delete'), sg.Combo(size=(41), values=car_list), sg.Push()],
         [sg.Push(), sg.Button('Delete Car Log'), sg.Push(), sg.Button('Cancel'), sg.Push()],
         [sg.VPush()]
     ]
@@ -338,10 +384,13 @@ def delete_car_log():
         if event == "Delete Car Log":
             value = values[0]
             delete_helper(value)
+            sg.popup('Car log deleted')
+            break
 
     window.close()
 
 def delete_helper(value):
+
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text('Do you wish to procede to delete the car log?', font='Arial 15'), sg.Push()],
@@ -365,46 +414,43 @@ def delete_helper(value):
                     break
                 window.close()
             else:
-                os.path.remove(file_name.lower() + '.txt')
+                os.remove(file_name.lower() + '.txt')
+                with open('database.txt', 'r') as data:
+                    new_data = data.readlines()
+                with open('database.txt', 'w') as updated:
+                    for line in new_data:
+                        if line.strip('\n') != file_delete:
+                            updated.write(line)
                 break
             window.close()
     window.close()
-# def access_log():
+def access_log():
+    database = open("database.txt", 'r')
+    car_database = database.read()
+    car_list = car_database.split('\n')
 
-#     layout = [
-#         [sg.Text(text='Here you can search for and edit an existing car log!')],
-#         [sg.Text(text='If you need to add an item to the log, simply click "Add Item".')],
-#         [sg.Text(text='If you want to edit the car log to change an item, you can clik "Edit Car Log')],
-#         [sg.Text(text='To search for a log, simply search the Year, Make, and Model below!')],
-#         [sg.Input()], [sg.Button('Access Car Log')],
-#         [sg.Button('Add Item'), sg.Button('Edit Car Log'), sg.Button('Close Window')]
-#     ]
+    layout = [
+        [sg.Text(text='Here you can search for an existing car log!')],
+        [sg.Text(text='To search for a log, simply select the Year, Make, and Model below!')],
+        [sg.Combo(size=(41), values=car_list)], [sg.Button('Access Car Log')],
+        [sg.Button('Close Window')]
+    ]
 
-#     window = sg.Window("Edit Car Log", layout)
-#     while True:
-#             event, values = window.read()
-#             if event == sg.WINDOW_CLOSED or event == 'Close Window':
-#                 break
-#             print(event, values)
+    window = sg.Window('Access Log', layout)
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Close Window':
+            break
+        window.close()
 
-#             if event == "Access Car Log":
-#                 find_car = values[0]
-#                 find_file = str(find_car).replace(' ', '.')
-#                 print(find_file)
-#                 if os.path.exists(find_file + '.txt') == False:
-#                     sg.popup(title='This Car Log does not exist', custom_text='This Car Log does not exist')
-#                     if event == "This Car Log does not exists":
-#                         window.close()
-#                 if event == 'Close Window':
-#                     window.close()
-#                 else:
-#                     webbrowser.open(find_file.lower() + '.txt')
-
-#             if event == 'Add Item':
-#                 sg.popup_get_text('Enter the Car Log you wish to add to!', title="Car Log Update")
-#                 edit_log = values[0]
-#                 log_edit = str(edit_log).replace(' ','.')
-#                 file_name = str(log_edit) + '.txt'
+        if event == 'Access Car Log':
+            data_file = open('data_file.txt', 'w')
+            with data_file:
+                data_file.write(str(values[0]))
+                data_file.close()
+                sg.popup("Car Found, gathering information")
+                break          
+    window.close()
                 
 
 def add_maintenance():
