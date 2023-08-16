@@ -1,0 +1,7 @@
+This file helps explain how the microservice works and what needs to be in place! 
+
+My microservice runs off of text files. This lets the microservice communicate with the program and vice versa. The microservice program needs to reside in the folder of the main program. This allows the text files to be used, otherwise the path of the files would be needed. 
+
+The microservice runs on pysimplegui. If pysimplegui is not on the users computer here are the instructions to install: https://www.pysimplegui.org/en/latest/
+
+That is the gist of the microservice function, the other README file detials how the communication pipeline works.
