@@ -1,4 +1,5 @@
 #CS361 Project: Tyler Purcell
+#Car log program to keep track of any and all maintenance done for a vehicle!
 
 
 import PySimpleGUI as sg
