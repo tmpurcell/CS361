@@ -7,10 +7,12 @@ from datetime import date
 import webbrowser
 import os.path
 
-sg.theme('Dark Green 2')
+sg.theme('Dark Green 2') #Overall theme for GUI
+
+#Each function has to access the GUI so the layout while not the same, has to be accessed each time
 
 def initial_window():
-    
+    #First window users see when the application runs
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text="Hello! Welcome to My Maintenance Record Keeper!"), sg.Push()],
@@ -36,6 +38,7 @@ def initial_window():
             maintenance_logger()
 
 def understanding_program():
+    #Help window function for the car logger
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Hello! Thank you for utilizing my program!', font='Arial 18'), sg.Push()],
@@ -80,7 +83,7 @@ def understanding_program():
     window.close()
 
 def button_help():
-     
+    #What users see when they navigate to the button help
     button_intro = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Buttons are cool! They will open new windows that increase the possibilites for this program!', font='Arial 13'), sg.Push()],
@@ -101,7 +104,7 @@ def button_help():
     window.close()
 
 def car_log_help():
-
+    #Initial help window for the car logger
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Create a car log!', font='Arial 15'), sg.Push()],
@@ -128,6 +131,7 @@ def car_log_help():
     window.close()
 
 def maintenance_help():
+    #How maintenance function of logger works
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='When adding maintenance to a car log, you will encounter the following:', font='Arial 13'), sg.Push()],
@@ -162,6 +166,7 @@ def maintenance_help():
     window.close()
 
 def access_car_log():
+    #How to utilize the access log function
     database = open("database.txt", 'r')
     car_database = database.read()
     car_list = car_database.split('\n')
@@ -197,7 +202,7 @@ def access_car_log():
         window.close()
 
 def close_window():
-    
+    #How the close window works for the application
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='This is a simple button!', font='Arial 13'), sg.Push()],
@@ -218,7 +223,7 @@ def close_window():
 
 
 def maintenance_logger():
-
+    #When accessing the logger, initial window for the logger
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='Please choose an item below!', font='Arial 15'), sg.Push()],
@@ -266,7 +271,7 @@ def maintenance_logger():
     window.close()
 
 def new_car_log():
-    
+    #Function to create a new car log
     layout = [
         [sg.Text(text='Please enter the year, Make, and Model of the new entry.')],
         [sg.Input()],
@@ -305,7 +310,7 @@ def new_car_log():
     window.close()
 
 def edit_car_log():
-
+    #Function to edit the car log
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Text(text='This feature allows you to edit a car log if you need to.'), sg.Push()],
@@ -359,6 +364,8 @@ def edit_car_log():
 
 
 def delete_car_log():
+    #Function to delete a specific car log
+
     database = open("database.txt", 'r')
     car_database = database.read()
     car_list = car_database.split('\n')
@@ -391,6 +398,7 @@ def delete_car_log():
     window.close()
 
 def delete_helper(value):
+    #Helper function that passes in value for deleting the car log file and name from database
 
     layout = [
         [sg.VPush()],
@@ -426,6 +434,8 @@ def delete_helper(value):
             window.close()
     window.close()
 def access_log():
+    #Function for utilizing partners microservice
+
     database = open("database.txt", 'r')
     car_database = database.read()
     car_list = car_database.split('\n')
@@ -455,6 +465,8 @@ def access_log():
                 
 
 def add_maintenance():
+    #Function to add a maintenance event to the car log
+
     database = open("database.txt", 'r')
     car_database = database.read()
     car_list = car_database.split('\n')
